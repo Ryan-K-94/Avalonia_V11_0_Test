@@ -1,0 +1,179 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:V11._0_MatrixTest.ViewModels"
+			 xmlns:local="clr-namespace:V11._0_MatrixTest.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="V11._0_MatrixTest.Views.MainView"
+             x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+    <vm:MainViewModel />
+  </Design.DataContext>
+
+	<UserControl.Resources>
+		<local:MatrixToggleBtnColourConverter x:Key="matrixToggleBtnColourConverter"/>
+	</UserControl.Resources>
+
+	<Panel>
+		<ExperimentalAcrylicBorder IsHitTestVisible="False">
+			<ExperimentalAcrylicBorder.Material>
+				<ExperimentalAcrylicMaterial
+					BackgroundSource="Digger"
+					TintColor="#1f1f1f"
+					TintOpacity="1"
+					MaterialOpacity="1" />
+			</ExperimentalAcrylicBorder.Material>
+		</ExperimentalAcrylicBorder>
+		
+		<TabControl SelectedIndex="{Binding TabCtrlIndex}">
+			
+			<TabItem Header="Tab_1">
+				<StackPanel>
+					<TextBox Text="Hello I'm tab 1"/>
+					
+					<ComboBox></ComboBox>
+					
+					<ToggleButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="8" Padding="0" Height="27" Width="27" Margin="1,1,1,1">
+						<ToggleButton.Styles>
+							<Style Selector="ToggleButton:checked">
+								<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+									<Setter Property="Background" Value="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).BindingTest, Converter={StaticResource matrixToggleBtnColourConverter}}"/>
+									<!--<Setter Property="Background" Value="Red"/>-->
+									<Setter Property="Opacity" Value="0.8"/>
+								</Style>
+							</Style>
+						</ToggleButton.Styles>
+					</ToggleButton>
+				</StackPanel>
+			</TabItem>
+
+			<TabItem Header="Tab_2">
+
+				<Grid Margin="0,0,0,20" RowDefinitions="60,*">
+					<Grid Grid.Row="0" ColumnDefinitions="200,*">
+
+						<!-- Matrix Headers (Fixed) -->
+						<ItemsRepeater Grid.Column="1" ItemsSource="{Binding PatchMatrix.MatrixColumn, Mode=TwoWay}">
+							<ItemsRepeater.Layout>
+								<StackLayout Spacing="5" Orientation="Horizontal" />
+							</ItemsRepeater.Layout>
+							<ItemsRepeater.ItemTemplate>
+								<DataTemplate>
+									<SplitView Name="RootSplitView0" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="CompactInline" PaneBackground="Transparent"
+											   OpenPaneLength="{Binding OpenPaneLength, Mode=TwoWay}" CompactPaneLength="29">
+										<SplitView.Pane>
+											<Grid RowDefinitions="30,30,*">
+												<!-- Matrix Sat Box Colapsed Button -->
+												<ToggleButton Name="ToggleBtnMatrixView" Grid.Row="0" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right"
+															  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold"
+															  Margin="0,0,4,0" IsChecked="{Binding IsPaneOpen, Mode=TwoWay}" Padding="0" Content="+">
+
+													<ToggleButton.Styles>
+														<Style Selector="ToggleButton:checked /template/ ContentPresenter">
+															<Setter Property="Background" Value="Gray"/>
+															<Setter Property="Opacity" Value="0.8"/>
+														</Style>
+													</ToggleButton.Styles>
+												</ToggleButton>
+
+												<!-- Matrix Column Headers -->
+												<TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"
+														   Text="{Binding SatBoxName}" IsVisible="{Binding IsChecked, ElementName=ToggleBtnMatrixView, Mode=TwoWay}"/>
+
+												<ItemsControl Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" ItemsSource="{Binding ColumnHeader}"
+															  ItemTemplate="{DynamicResource DataTemplate_MatrixHeaderLvl1}" IsVisible="{Binding IsChecked, ElementName=ToggleBtnMatrixView, Mode=TwoWay}"/>
+											</Grid>
+										</SplitView.Pane>
+									</SplitView>
+								</DataTemplate>
+							</ItemsRepeater.ItemTemplate>
+						</ItemsRepeater>
+					</Grid>
+
+					<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" Margin="0,0,0,10">
+						<Grid ColumnDefinitions="200,*">
+							<!-- Matrix Row Header -->
+							<Grid Grid.Column="0">
+								<ItemsRepeater ItemsSource="{Binding PatchMatrix.MatrixRow}">
+									<ItemsRepeater.ItemTemplate>
+										<DataTemplate>
+											<Grid ColumnDefinitions="40,*">
+												<Button Grid.Column="0" Content="{Binding MatrixRowCh}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsHitTestVisible="False"
+														HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Height="27" Width="35" Margin="1,1,1,1" Background="Transparent"/>
+												<TextBlock Grid.Column="1" Text="{Binding MatrixRowName}" VerticalAlignment="Center" Padding="0"/>
+											</Grid>
+										</DataTemplate>
+									</ItemsRepeater.ItemTemplate>
+								</ItemsRepeater>
+							</Grid>
+
+							<!-- Matrix Grid (Buttons) -->
+							<ItemsRepeater Grid.Column="1" ItemsSource="{Binding PatchMatrix.MatrixColumn, Mode=TwoWay}">
+								<ItemsRepeater.Layout>
+									<StackLayout Spacing="5" Orientation="Horizontal" />
+								</ItemsRepeater.Layout>
+								<ItemsRepeater.ItemTemplate>
+									<DataTemplate>
+										<SplitView Name="RootSplitView0" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="CompactInline" PaneBackground="Transparent"
+												   OpenPaneLength="{Binding OpenPaneLength, Mode=TwoWay}" CompactPaneLength="29">
+											<SplitView.Pane>
+												<!-- Matrix Grid-->
+												<ItemsControl Grid.Row="2" Name="GridItem0" ItemsSource="{Binding Column, Mode=TwoWay}" ItemTemplate="{DynamicResource DataTemplate_Level1}"
+															  IsVisible="{Binding IsPaneOpen, Mode=TwoWay}" Width="{Binding OpenPaneLength, Mode=OneWayToSource}"/>
+											</SplitView.Pane>
+										</SplitView>
+									</DataTemplate>
+								</ItemsRepeater.ItemTemplate>
+							</ItemsRepeater>
+						</Grid>
+					</ScrollViewer>
+				</Grid>
+			</TabItem>
+		</TabControl>
+	</Panel>
+
+	<!-- Patch Matrix Data Template -->
+	<UserControl.Resources>
+		<DataTemplate x:CompileBindings="False" x:Key="DataTemplate_Level2">
+			<ToggleButton Name="MatrixButton" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="8" Padding="0" Height="27" Width="27" Margin="1,1,1,1">
+				
+				<ToggleButton.Styles>
+					<Style Selector="ToggleButton:checked">
+						<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="Background" Value="{Binding IsAssignedTooInOut, Converter={StaticResource matrixToggleBtnColourConverter}}"/>
+							<Setter Property="Opacity" Value="0.8"/>
+						</Style>
+					</Style>
+				</ToggleButton.Styles>
+			</ToggleButton>
+		</DataTemplate>
+
+		<DataTemplate x:CompileBindings="False" x:Key="DataTemplate_Level1">
+			<ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_Level2}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Orientation="Horizontal"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+			</ItemsControl>
+		</DataTemplate>
+
+		<DataTemplate x:CompileBindings="False" x:Key="DataTemplate_MatrixHeaderLvl2">
+			<Button Content="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+					Height="27" Width="27" Margin="1,1,1,1" FontSize="14" Padding="0" Background="Transparent" IsHitTestVisible="False"/>
+		</DataTemplate>
+
+		<DataTemplate x:CompileBindings="False" x:Key="DataTemplate_MatrixHeaderLvl1">
+			<ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_MatrixHeaderLvl2}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Orientation="Horizontal"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+			</ItemsControl>
+		</DataTemplate>
+	</UserControl.Resources>
+</UserControl>

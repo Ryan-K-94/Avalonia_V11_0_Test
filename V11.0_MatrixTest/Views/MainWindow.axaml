@@ -1,0 +1,12 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:V11._0_MatrixTest.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:V11._0_MatrixTest.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="V11._0_MatrixTest.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="V11._0_MatrixTest">
+        <views:MainView />
+</Window>
